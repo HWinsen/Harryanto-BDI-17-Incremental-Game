@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            if (s_instance = null)
+            if (s_instance == null)
             {
                 s_instance = FindObjectOfType<GameManager>();
             }
@@ -27,11 +27,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Transform _resourcesParent;
     [SerializeField] private ResourceController _resourcePrefab;
+    [SerializeField] private TapText _tapTextPrefab;
 
+    [SerializeField] private Transform _coinIcon;
     [SerializeField] private Text _goldInfo;
     [SerializeField] private Text _autoCollectInfo;
 
     private List<ResourceController> _activeResources = new List<ResourceController>();
+    private List<TapText> _tapTextPool = new List<TapText>();
     private float _collectSecond;
 
     private double _totalGold;
@@ -52,6 +55,9 @@ public class GameManager : MonoBehaviour
             CollectPerSecond();
             _collectSecond = 0f;
         }
+
+        _coinIcon.transform.localScale = Vector3.LerpUnclamped(_coinIcon.transform.localScale, Vector3.one * 2f, 0.15f);
+        _coinIcon.transform.Rotate(0f, 0f, Time.deltaTime * -100f);
     }
 
     private void AddAllResources()
@@ -87,6 +93,37 @@ public class GameManager : MonoBehaviour
     {
         _totalGold += value;
         _goldInfo.text = $"Gold: {_totalGold.ToString("0")}";
+    }
+
+    public void CollectByTap(Vector3 tapPosition, Transform parent)
+    {
+        double _output = 0;
+        foreach (ResourceController resource in _activeResources)
+        {
+            _output += resource.GetOutput();
+        }
+
+        TapText _tapText = GetOrCreateTapText();
+        _tapText.transform.SetParent(parent, false);
+        _tapText.transform.position = tapPosition;
+        
+        _tapText.Text.text = $"+{_output.ToString("0")}";
+        _tapText.gameObject.SetActive(true);
+        _coinIcon.transform.localScale = Vector3.one * 1.75f;
+        
+        AddGold(_output);
+    }
+
+    private TapText GetOrCreateTapText()
+    {
+        TapText _tapText = _tapTextPool.Find(t => !t.gameObject.activeSelf);
+        if (_tapText == null)
+        {
+            _tapText = Instantiate(_tapTextPrefab).GetComponent<TapText>();
+            _tapTextPool.Add(_tapText);
+        }
+
+        return _tapText;
     }
 }
 
