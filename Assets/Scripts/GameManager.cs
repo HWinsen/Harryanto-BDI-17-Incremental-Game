@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float _autoCollectPercentage = 0.1f;
     [SerializeField] private ResourceConfig[] _resourcesConfigs;
+    [SerializeField] private Sprite[] _resourcesSprites;
 
     [SerializeField] private Transform _resourcesParent;
     [SerializeField] private ResourceController _resourcePrefab;
@@ -37,7 +38,7 @@ public class GameManager : MonoBehaviour
     private List<TapText> _tapTextPool = new List<TapText>();
     private float _collectSecond;
 
-    private double _totalGold;
+    public double TotalGold {get; private set;}
 
 
     // Start is called before the first frame update
@@ -56,6 +57,8 @@ public class GameManager : MonoBehaviour
             _collectSecond = 0f;
         }
 
+        CheckResourceCost();
+
         _coinIcon.transform.localScale = Vector3.LerpUnclamped(_coinIcon.transform.localScale, Vector3.one * 2f, 0.15f);
         _coinIcon.transform.Rotate(0f, 0f, Time.deltaTime * -100f);
     }
@@ -69,6 +72,16 @@ public class GameManager : MonoBehaviour
 
             _resource.SetConfig(config);
             _activeResources.Add(_resource);
+        }
+    }
+
+    private void CheckResourceCost()
+    {
+        foreach (ResourceController resource in _activeResources)
+        {
+            bool isBuyable = TotalGold >= resource.GetUpgradeCost();
+
+            resource.ResourceImage.sprite = _resourcesSprites[isBuyable ? 1:0];
         }
     }
 
@@ -89,10 +102,10 @@ public class GameManager : MonoBehaviour
         AddGold(_output);
     }
 
-    private void AddGold(double value)
+    public void AddGold(double value)
     {
-        _totalGold += value;
-        _goldInfo.text = $"Gold: {_totalGold.ToString("0")}";
+        TotalGold += value;
+        _goldInfo.text = $"Gold: {TotalGold.ToString("0")}";
     }
 
     public void CollectByTap(Vector3 tapPosition, Transform parent)

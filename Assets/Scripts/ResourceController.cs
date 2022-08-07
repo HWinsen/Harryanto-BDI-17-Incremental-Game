@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ResourceController : MonoBehaviour
 {
+    [SerializeField] private Button _ResourceButton;
+    public Image ResourceImage;
     [SerializeField] private Text _ResourceDescription;
     [SerializeField] private Text _ResourceUpgradeCost;
     [SerializeField] private Text _ResourceUnlockCost;
@@ -12,6 +14,10 @@ public class ResourceController : MonoBehaviour
     private ResourceConfig _config;
 
     private int _level = 1;
+
+    private void Start() {
+        _ResourceButton.onClick.AddListener(UpgradeLevel);
+    }
 
     public void SetConfig(ResourceConfig config)
     {
@@ -38,10 +44,20 @@ public class ResourceController : MonoBehaviour
         return _config.UnlockCost;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void UpgradeLevel()
     {
-        
+        Debug.Log("pencet");
+        double upgradeCost = GetUpgradeCost();
+        if (GameManager.Instance.TotalGold < upgradeCost)
+        {
+            return;
+        }
+
+        GameManager.Instance.AddGold(-upgradeCost);
+        _level++;
+
+        _ResourceUpgradeCost.text = $"Upgrade Cost\n{GetUpgradeCost()}";
+        _ResourceDescription.text = $"{_config.Name} Lv. {_level}\n{GetOutput().ToString("0")}";
     }
 
     // Update is called once per frame

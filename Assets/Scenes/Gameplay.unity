@@ -701,7 +701,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1546056841}
   m_HandleRect: {fileID: 1546056840}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -864,6 +864,9 @@ MonoBehaviour:
     UnlockCost: 0
     UpgradeCost: 1
     Output: 2
+  _resourcesSprites:
+  - {fileID: 21300000, guid: a31802f78aaae534387c77f30a2bba98, type: 3}
+  - {fileID: 21300000, guid: fb62a92be360fb14795524a6fcf1bc60, type: 3}
   _resourcesParent: {fileID: 80060612}
   _resourcePrefab: {fileID: 1449759012802418387, guid: 92a191da4acc7eb468b5d39febd8bb3a, type: 3}
   _tapTextPrefab: {fileID: 4744307874019640543, guid: 2d75ac94edec2ce43b7fbfd16d2cc5ba, type: 3}
