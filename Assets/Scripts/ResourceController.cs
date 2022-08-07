@@ -15,8 +15,21 @@ public class ResourceController : MonoBehaviour
 
     private int _level = 1;
 
-    private void Start() {
-        _ResourceButton.onClick.AddListener(UpgradeLevel);
+    public bool IsUnlocked {get; private set;}
+
+    private void Start()
+    {
+        _ResourceButton.onClick.AddListener(() =>
+        {
+            if (IsUnlocked)
+            {
+                UpgradeLevel();
+            }
+            else
+            {
+                UnlockResource();
+            }
+        });
     }
 
     public void SetConfig(ResourceConfig config)
@@ -27,6 +40,8 @@ public class ResourceController : MonoBehaviour
         _ResourceDescription.text = $"{_config.Name} Lv. {_level}\n+{GetOutput().ToString("0")}";
         _ResourceUnlockCost.text = $"Unlock Cost\n{_config.UnlockCost}";
         _ResourceUpgradeCost.text = $"Upgrade Cost\n{GetUpgradeCost()}";
+
+        SetUnlocked(_config.UnlockCost == 0);
     }
 
     public double GetOutput()
@@ -46,7 +61,7 @@ public class ResourceController : MonoBehaviour
 
     public void UpgradeLevel()
     {
-        Debug.Log("pencet");
+        // Debug.Log("pencet");
         double upgradeCost = GetUpgradeCost();
         if (GameManager.Instance.TotalGold < upgradeCost)
         {
@@ -58,6 +73,26 @@ public class ResourceController : MonoBehaviour
 
         _ResourceUpgradeCost.text = $"Upgrade Cost\n{GetUpgradeCost()}";
         _ResourceDescription.text = $"{_config.Name} Lv. {_level}\n{GetOutput().ToString("0")}";
+    }
+
+    public void UnlockResource()
+    {
+        double unlockCost = GetUnlockCost();
+        if (GameManager.Instance.TotalGold < unlockCost)
+        {
+            return;
+        }
+
+        SetUnlocked(true);
+        GameManager.Instance.ShowNextResource();
+    }
+
+    public void SetUnlocked(bool unlocked)
+    {
+        IsUnlocked = unlocked;
+        ResourceImage.color = IsUnlocked ? Color.white : Color.grey;
+        _ResourceUnlockCost.gameObject.SetActive(!unlocked);
+        _ResourceUpgradeCost.gameObject.SetActive(unlocked);
     }
 
     // Update is called once per frame

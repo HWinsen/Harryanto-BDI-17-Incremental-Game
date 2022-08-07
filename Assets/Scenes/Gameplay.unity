@@ -702,7 +702,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1546056840}
   m_Direction: 0
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -864,6 +864,18 @@ MonoBehaviour:
     UnlockCost: 0
     UpgradeCost: 1
     Output: 2
+  - Name: Pegawai Magang
+    UnlockCost: 100
+    UpgradeCost: 100
+    Output: 200
+  - Name: Pegawai Tetap
+    UnlockCost: 10000
+    UpgradeCost: 10000
+    Output: 20000
+  - Name: Manager
+    UnlockCost: 100000
+    UpgradeCost: 100000
+    Output: 200000
   _resourcesSprites:
   - {fileID: 21300000, guid: a31802f78aaae534387c77f30a2bba98, type: 3}
   - {fileID: 21300000, guid: fb62a92be360fb14795524a6fcf1bc60, type: 3}
